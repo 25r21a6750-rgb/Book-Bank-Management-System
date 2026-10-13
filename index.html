@@ -1,1 +1,273 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Bank Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<div class="app">
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-book-open"></i>
+            <div>
+                <h2>Book Bank</h2>
+                <small>Management System</small>
+            </div>
+        </div>
+
+        <nav>
+            <button class="nav-link active" data-page="dashboard">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </button>
+            <button class="nav-link" data-page="books">
+                <i class="fa-solid fa-book"></i> Books
+            </button>
+            <button class="nav-link" data-page="members">
+                <i class="fa-solid fa-users"></i> Members
+            </button>
+            <button class="nav-link" data-page="issue">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Issue Book
+            </button>
+            <button class="nav-link" data-page="return">
+                <i class="fa-solid fa-arrow-rotate-left"></i> Return Book
+            </button>
+            <button class="nav-link" data-page="transactions">
+                <i class="fa-solid fa-clock-rotate-left"></i> Transactions
+            </button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <i class="fa-solid fa-book-open-reader"></i>
+            <p>Read More,<br>Grow More!</p>
+            <small>Your learning companion</small>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <button class="menu-btn" id="menuBtn" aria-label="Toggle sidebar">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="top-right">
+                <span id="currentDate"></span>
+                <div class="admin">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span>Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <section class="page active" id="dashboard">
+                <div class="page-heading">
+                    <div>
+                        <h1>Welcome to Book Bank!</h1>
+                        <p>Manage your books, members and transactions easily.</p>
+                    </div>
+                    <button class="primary-btn" onclick="showPage('books')">
+                        <i class="fa-solid fa-plus"></i> Add New Book
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-icon"><i class="fa-solid fa-book"></i></div>
+                        <div><p>Total Books</p><h2 id="totalBooks">0</h2><small>Book copies in bank</small></div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                        <div><p>Total Members</p><h2 id="totalMembers">0</h2><small>Registered students</small></div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+                        <div><p>Issued Books</p><h2 id="issuedBooks">0</h2><small>Currently borrowed</small></div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+                        <div><p>Available Books</p><h2 id="availableBooks">0</h2><small>Ready to issue</small></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h3>Book Collection</h3>
+                            <i class="fa-solid fa-chart-pie accent"></i>
+                        </div>
+                        <div class="collection">
+                            <div class="donut" id="bookDonut"><span id="donutValue">0</span></div>
+                            <div class="legend">
+                                <p><span class="dot blue-dot"></span> Available <b id="legendAvailable">0</b></p>
+                                <p><span class="dot purple-dot"></span> Issued <b id="legendIssued">0</b></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <h3>Quick Actions</h3>
+                            <i class="fa-solid fa-bolt accent"></i>
+                        </div>
+                        <div class="quick-actions">
+                            <button onclick="showPage('books')"><i class="fa-solid fa-book"></i><span>Add Book</span></button>
+                            <button onclick="showPage('members')"><i class="fa-solid fa-user-plus"></i><span>Add Member</span></button>
+                            <button onclick="showPage('issue')"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Issue Book</span></button>
+                            <button onclick="showPage('return')"><i class="fa-solid fa-arrow-rotate-left"></i><span>Return Book</span></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel table-panel">
+                    <div class="panel-heading">
+                        <h3>Recent Transactions</h3>
+                        <button class="text-btn" onclick="showPage('transactions')">View All →</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Book</th><th>Member</th><th>Issue Date</th><th>Due Date</th><th>Status</th></tr></thead>
+                            <tbody id="recentTransactions"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BOOKS -->
+            <section class="page" id="books">
+                <div class="page-heading">
+                    <div><h1>Book Management</h1><p>Add and manage your book collection.</p></div>
+                </div>
+
+                <div class="panel form-panel">
+                    <h3><i class="fa-solid fa-plus-circle accent"></i> Add a New Book</h3>
+                    <form id="bookForm" class="form-grid">
+                        <label>Book Title<input id="bookTitle" required placeholder="Enter book title"></label>
+                        <label>Author<input id="bookAuthor" required placeholder="Enter author name"></label>
+                        <label>Category
+                            <select id="bookCategory">
+                                <option>Education</option><option>Technology</option>
+                                <option>Science</option><option>Fiction</option>
+                                <option>History</option><option>Mathematics</option>
+                                <option>Other</option>
+                            </select>
+                        </label>
+                        <label>Total Copies<input id="bookCopies" type="number" min="1" value="1" required></label>
+                        <button class="primary-btn form-submit" type="submit"><i class="fa-solid fa-plus"></i> Add Book</button>
+                    </form>
+                </div>
+
+                <div class="panel table-panel">
+                    <div class="panel-heading">
+                        <h3>All Books</h3>
+                        <input class="search" id="bookSearch" placeholder="Search books...">
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>ID</th><th>Title</th><th>Author</th><th>Category</th><th>Total</th><th>Available</th><th>Action</th></tr></thead>
+                            <tbody id="booksTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MEMBERS -->
+            <section class="page" id="members">
+                <div class="page-heading">
+                    <div><h1>Member Management</h1><p>Register and manage student members.</p></div>
+                </div>
+
+                <div class="panel form-panel">
+                    <h3><i class="fa-solid fa-user-plus accent"></i> Register a Member</h3>
+                    <form id="memberForm" class="form-grid">
+                        <label>Full Name<input id="memberName" required placeholder="Student name"></label>
+                        <label>Student ID<input id="memberStudentId" required placeholder="Student ID"></label>
+                        <label>Email<input id="memberEmail" type="email" placeholder="Email address"></label>
+                        <label>Department<input id="memberDepartment" required placeholder="e.g. CSE"></label>
+                        <button class="primary-btn form-submit" type="submit"><i class="fa-solid fa-user-plus"></i> Add Member</button>
+                    </form>
+                </div>
+
+                <div class="panel table-panel">
+                    <div class="panel-heading">
+                        <h3>Registered Members</h3>
+                        <input class="search" id="memberSearch" placeholder="Search members...">
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>ID</th><th>Name</th><th>Student ID</th><th>Email</th><th>Department</th><th>Action</th></tr></thead>
+                            <tbody id="membersTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ISSUE BOOK -->
+            <section class="page" id="issue">
+                <div class="page-heading">
+                    <div><h1>Issue a Book</h1><p>Assign an available book to a registered member.</p></div>
+                </div>
+                <div class="panel form-panel narrow-panel">
+                    <div class="large-icon issue-icon"><i class="fa-solid fa-book-open"></i></div>
+                    <h2>Book Issue Form</h2>
+                    <p class="muted">Select the book and member, then confirm.</p>
+                    <form id="issueForm" class="stack-form">
+                        <label>Select Book<select id="issueBook" required></select></label>
+                        <label>Select Member<select id="issueMember" required></select></label>
+                        <label>Due Date<input id="issueDueDate" type="date" required></label>
+                        <button class="primary-btn" type="submit"><i class="fa-solid fa-check"></i> Issue Book</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- RETURN BOOK -->
+            <section class="page" id="return">
+                <div class="page-heading">
+                    <div><h1>Return a Book</h1><p>Record returned books and update availability.</p></div>
+                </div>
+                <div class="panel table-panel">
+                    <div class="panel-heading"><h3>Currently Issued Books</h3></div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Book</th><th>Member</th><th>Issue Date</th><th>Due Date</th><th>Action</th></tr></thead>
+                            <tbody id="returnTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TRANSACTIONS -->
+            <section class="page" id="transactions">
+                <div class="page-heading">
+                    <div><h1>Transaction History</h1><p>View all book issue and return records.</p></div>
+                </div>
+                <div class="panel table-panel">
+                    <div class="panel-heading">
+                        <h3>All Transactions</h3>
+                        <input class="search" id="transactionSearch" placeholder="Search transactions...">
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead><tr><th>Book</th><th>Member</th><th>Issue Date</th><th>Due Date</th><th>Return Date</th><th>Status</th></tr></thead>
+                            <tbody id="transactionsTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <footer>© 2026 Book Bank Management System | Built for easy book management</footer>
+        </div>
+    </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
